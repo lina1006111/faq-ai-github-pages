@@ -9,7 +9,8 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "public"
-MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+MODEL = "openai/gpt-oss-20b"
+  
 FAQ = [
     ("忘記密碼怎麼辦？", "請點選登入頁面的「忘記密碼」，輸入註冊信箱，並依照收到的郵件重設密碼。"),
     ("如何修改會員資料？", "登入後前往「會員中心」與「個人資料」，修改後記得儲存。"),
