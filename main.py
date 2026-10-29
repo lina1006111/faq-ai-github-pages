@@ -44,7 +44,7 @@ def ask_llm(question: str) -> str:
          error_body = exc.read().decode("utf-8", errors="replace")
          raise RuntimeError(
              f"Groq API returned HTTP {exc.code}: {error_body}"
-    ) from exc
+         ) from exc
     except URLError as exc:
         raise RuntimeError("Unable to reach Groq API") from exc
     return result["choices"][0]["message"]["content"].strip()
