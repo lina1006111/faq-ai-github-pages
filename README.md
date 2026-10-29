@@ -3,7 +3,7 @@
 使用 **Python + uv + Groq LLM** 依照小型 FAQ 知識庫產生回答，再透過 **GitHub Actions** 自動部署到 **GitHub Pages**。
 
 ## 1. 作品功能
-- Python 以 HTTP API 呼叫雲端 LLM（Groq Chat Completions）。
+- Python 使用 Groq 官方 SDK 呼叫 openai/gpt-oss-20b 模型。
 - 向 LLM 提供 FAQ 參考答案，生成 4 題繁體中文回答。
 - 輸出 `public/results.json` 及 `public/index.html`。
 - 推送 `main` 分支後，GitHub Actions 自動執行 Python 並部署 Pages。
@@ -42,17 +42,21 @@
 - 若金鑰未設定、API 失敗或達到限額，workflow 會失敗，不會假裝生成成功。
 
 ## 5. AI 使用說明
-- **使用工具：** ChatGPT：協助規劃專案架構、撰寫 Python 程式、產生 HTML 網頁、建立 GitHub Actions workflow，以及排除執行錯誤。
-Groq API：透過 openai/gpt-oss-20b 模型產生繁體中文 FAQ 回答。
-- **使用位置：** main.py：LLM API 呼叫、提示詞設計及 FAQ 回答產生。render()：將 FAQ 問答結果轉換為 HTML 網頁。
+- **使用工具：**
+ChatGPT：協助規劃專案架構、撰寫 Python 程式、建立 GitHub Actions workflow，以及排除執行錯誤。
+Groq API：使用 openai/gpt-oss-20b 模型產生繁體中文 FAQ 回答。
 
+- **使用位置：**
+main.py：LLM API 呼叫、提示詞設計及 FAQ 回答產生。render()：將 FAQ 問答結果轉換為 HTML 網頁。
 .github/workflows/deploy.yml：自動執行 Python 並部署至 GitHub Pages。
+
 - **個人修改與個人驗證：**
 1.調整 GitHub Repository 的檔案結構，讓 main.py 與 pyproject.toml 位於根目錄。
 2.修正 Python 程式的縮排錯誤。
 3.將原本透過 urllib 呼叫 API 的方式改為 Groq 官方 Python SDK。
 4.更換無法使用的模型為 openai/gpt-oss-20b。
 5.於 2026 年 10 月 29 日確認 GitHub Actions 執行成功，並驗證 GitHub Pages 正常顯示四組 FAQ 回答。
+  
 **驗證結果：** 測試日期：2026 年 10 月 29 日。
 確認 GitHub Actions 成功執行，顯示綠色勾勾。
 確認 GitHub Pages 可正常開啟。
@@ -69,6 +73,14 @@ pyproject.toml                # uv 專案配置
 .gitignore                    # 排除 .env、產出檔案及虛擬環境
 .github/workflows/deploy.yml  # GitHub Actions 自動部署
 README.md                     # 功能、操作、執行與 AI 使用說明
+
+main.py
+pyproject.toml
+README.md
+.github/
+    workflows/
+        deploy.yml
+
 ```
 
 ## 7. 交作業前檢查
