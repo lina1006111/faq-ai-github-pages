@@ -1,0 +1,6 @@
+[project]
+name = "faq-ai-github-pages"
+version = "0.1.0"
+description = "LLM-generated FAQ site, deployed by GitHub Actions"
+requires-python = ">=3.12"
+dependencies = []
