@@ -41,9 +41,9 @@ def ask_llm(question: str) -> str:
         with urlopen(req, timeout=45) as response:
             result = json.load(response)
     except HTTPError as exc:
-    error_body = exc.read().decode("utf-8", errors="replace")
-    raise RuntimeError(
-        f"Groq API returned HTTP {exc.code}: {error_body}"
+         error_body = exc.read().decode("utf-8", errors="replace")
+         raise RuntimeError(
+             f"Groq API returned HTTP {exc.code}: {error_body}"
     ) from exc
     except URLError as exc:
         raise RuntimeError("Unable to reach Groq API") from exc
