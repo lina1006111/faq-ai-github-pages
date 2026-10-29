@@ -37,6 +37,9 @@ def ask_llm(question: str) -> str:
         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
         method="POST",
     )
+    
+    req.add_header("User-Agent", "FAQ-AI-Homework/1.0")
+
     try:
         with urlopen(req, timeout=45) as response:
             result = json.load(response)
