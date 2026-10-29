@@ -19,38 +19,41 @@ FAQ = [
 
 
 def ask_llm(question: str) -> str:
+    from groq import Groq
+
     key = os.environ.get("GROQ_API_KEY")
     if not key:
-        raise RuntimeError("Missing GROQ_API_KEY. Set it locally or in GitHub Actions secrets.")
-    prompt = "\n".join(f"問：{q}\n參考回答：{a}" for q, a in FAQ)
-    payload = {
-        "model": MODEL,
-        "messages": [
-            {"role": "system", "content": "你是繁體中文 FAQ 客服助理。請根據以下 FAQ 回答問題，答案不超過 100 字。如果資訊不足，請明確表示無法確認，不要編造政策。\n" + prompt},
-            {"role": "user", "content": question},
-        ],
-        "temperature": 0.2,
-    }
-    req = Request(
-        "https://api.groq.com/openai/v1/chat/completions",
-        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-        method="POST",
-    )
-    
-    req.add_header("User-Agent", "FAQ-AI-Homework/1.0")
+        raise RuntimeError("Missing GROQ_API_KEY")
 
-    try:
-        with urlopen(req, timeout=45) as response:
-            result = json.load(response)
-    except HTTPError as exc:
-         error_body = exc.read().decode("utf-8", errors="replace")
-         raise RuntimeError(
-             f"Groq API returned HTTP {exc.code}: {error_body}"
-         ) from exc
-    except URLError as exc:
-        raise RuntimeError("Unable to reach Groq API") from exc
-    return result["choices"][0]["message"]["content"].strip()
+    prompt = "\n".join(
+        f"問：{q}\n參考回答：{a}" for q, a in FAQ
+    )
+
+    client = Groq(api_key=key)
+
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "你是繁體中文 FAQ 客服助理。"
+                    "請根據以下 FAQ 回答問題，"
+                    "答案不超過100字。"
+                    "資訊不足時不要編造。\n" + prompt
+                )
+            },
+            {
+                "role": "user",
+                "content": question
+            }
+        ],
+        temperature=0.2
+    )
+
+    return response.choices[0].message.content.strip()
+
+
 
 
 def render(results: list[dict]) -> str:
